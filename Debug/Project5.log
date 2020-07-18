@@ -1,0 +1,13 @@
+﻿  Using triplet "x86-windows" from "D:\vcpkg\vcpkg\installed\x86-windows\"
+  Source.cpp
+C:\Users\thetu\source\repos\Project5\Source.cpp(64,17): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\thetu\source\repos\Project5\Source.cpp(150,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\thetu\source\repos\Project5\Source.cpp(269,17): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\thetu\source\repos\Project5\Source.cpp(273,18): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\thetu\source\repos\Project5\Source.cpp(283,16): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\thetu\source\repos\Project5\Source.cpp(287,17): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\thetu\source\repos\Project5\Source.cpp(312,18): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\thetu\source\repos\Project5\Source.cpp(316,17): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\thetu\source\repos\Project5\Source.cpp(320,18): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\thetu\source\repos\Project5\Source.cpp(325,18): warning C4305: '+=': truncation from 'double' to 'float'
+  Project5.vcxproj -> C:\Users\thetu\source\repos\Project5\Debug\Project5.exe
