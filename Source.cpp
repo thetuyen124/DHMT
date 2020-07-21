@@ -1,29 +1,64 @@
 #include <GL/glut.h>
-#include <stdlib.h>
-#include <cmath>
 
-static GLfloat spin = 0.0;
 float zoom = 4;
 float tX = 0, tY = 0, tZ = -8, rX = 0, rY = 0, rZ = 4;
 float rotX = 0, rotY = 0, rotZ = 0;
 float space = 0.0;
 float fracx = 0;
 float fracy = 0;
-
+float fracz = 0.001;
 bool rot = false;
-
-
 
 void mouse(int button, int state, int x, int y);
 void plane();
 void draw();
 static void key(unsigned char key, int x, int y);
 
+void DrawCoordinate()
+{
+	glBegin(GL_LINES);
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(10.0, 0.0, 0.0);
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(0.0, 10.0, 0.0);
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(0.0, 0.0, 1.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(0.0, 0.0, 10.0);
+	glEnd();
+}
 
+void lighting()
+{
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_DEPTH_TEST);
+
+	GLfloat light_pos[] = { 10.0, 0.0, 10.0, 0.0 };
+	glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+
+	GLfloat ambient[] = { 0.0, 0.0, 1.0, 1.0 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+
+	GLfloat diff_use[] = { 0.0,0.6,0.9, 1.0 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diff_use);
+
+	GLfloat specular[] = { 0.0, 0.0, 0.0, 1.0 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+
+	GLfloat shininess = 50.0f;
+	glMateriali(GL_FRONT, GL_SHININESS, shininess);
+}
 
 void init(void)
 {
 	glClearColor(0.5, 0.5, 1.0, 1.0);
+	lighting();
 }
 
 void display(void)
@@ -32,17 +67,15 @@ void display(void)
 
 	glLoadIdentity();
 
-	gluLookAt(0.0, 4.5, 10.0,
+	gluLookAt(0, 7, 15,
 		0, 4, 0,
 		0.0f, 1.0f, 0.0f);
 
 	glPushMatrix();
-	glTranslated(0, 0, 0);
 	glScaled(zoom, zoom, zoom);
-	glRotated(spin, 1, 0, 0);
-
 	glTranslatef(tX, tY, space);
 	draw();
+	//DrawCoordinate();
 	glPopMatrix();
 	glutSwapBuffers();
 	
@@ -61,7 +94,7 @@ void fly(void)
 		fracy = 0;
 	}
 	else {
-		space -= 0.001;
+		space -= fracz;
 		tX += fracx;
 		tY += fracy;
 	}
@@ -98,19 +131,22 @@ void mouse(int button, int state, int x, int y)
 			space = 0;
 			fracx = 0;
 			fracy = 0;
+			fracz = 0.001;
+			glutIdleFunc(NULL);
 		}
+		break;
+	case GLUT_RIGHT_BUTTON:
+		glutIdleFunc(NULL);
 		break;
 	default:
 		break;
 	}
 }
-/* Request double buffer display mode.
-Register mouse input callback functions */
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	glutInitWindowSize(700, 500);
-	glutInitWindowPosition(400, 100);
+	glutInitWindowSize(1080, 768);
+	glutInitWindowPosition(400, 150);
 	glutCreateWindow(argv[0]);
 	init();
 	glutDisplayFunc(display);
@@ -126,12 +162,10 @@ int main(int argc, char** argv) {
 void plane() {
 
 	const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-	double a = t * 90.0;
 
 	/// Main body
 	glColor3f(0, 0, 0);
 	glPushMatrix();
-	glTranslated(0, 0, 0);
 	glScaled(3, 0.4, 0.5);
 	glutSolidSphere(1, 30, 30);
 	glPopMatrix();
@@ -169,13 +203,6 @@ void plane() {
 	glTranslated(0.2, -0.15, 0.9);
 	glRotated(90, 0, 1, 0);
 
-	/// FAN
-	//        glPushMatrix();
-	//            glTranslated(0,0,0.5);
-	//            glRotated(10*a,0,0,1);
-	//            glScaled(0.1,0.1,0.1);
-	//            fan();
-	//        glPopMatrix();
 
 	glScaled(0.1, 0.1, 0.9);
 	glutSolidTorus(0.5, 0.5, 50, 50);
@@ -213,7 +240,7 @@ void plane() {
 	glTranslated(-2.8, 0, 0);
 	glScaled(0.8, 0.5, 0.3);
 
-	///Right
+	//duoi phai
 	glColor3d(0.8, 1, 0);
 	glPushMatrix();
 	glTranslated(0.4, 0, 1.5);
@@ -223,7 +250,7 @@ void plane() {
 	glutSolidCube(1);
 	glPopMatrix();
 
-	///left
+	///duoi trai
 	glColor3d(0.8, 1, 0);
 	glPushMatrix();
 	glTranslated(0.4, 0, -1.5);
@@ -234,7 +261,7 @@ void plane() {
 	glPopMatrix();
 	glPopMatrix();
 
-	/// Pesoner Uporer pakha
+	/// duoi dung
 	glColor3d(0.8, 1, 0);
 	glPushMatrix();
 	glTranslated(-2.7, 0.5, 0);
@@ -243,24 +270,7 @@ void plane() {
 	glRotated(-20, 0, 0, 1);
 	glutSolidCube(0.5);
 	glPopMatrix();
-
-	//    glColor3d(0.8,1,0);
-	//    glPushMatrix();
-	//        glTranslated(-2.95,0.85,0);
-	//        glRotated(90,0,1,0);
-	//        glScaled(0.05,0.05,0.6);
-	//        glutSolidTorus(0.5,0.5,50,50);
-	//    glPopMatrix();
-
-
-		///FANS
-
-	//    glPushMatrix();
-	//        glTranslated(0,0,0);
-	//        glRotated(10*a,0,0,1);
-	//        //glRotated(90,1,0,0);
-	//        fan();
-	//    glPopMatrix();
+	
 }
 
 void draw() {
@@ -289,11 +299,11 @@ void draw() {
 		glPushMatrix();
 		glTranslated(0, 1, 0);
 		glRotated(90, 0, 1, 0);
+
 		glRotated(5, 0, 0, 1);
 		glRotated(rotX, 1, 0, 0);
 		glRotated(rotY, 0, 1, 0);
 		glRotated(rotZ, 0, 0, 1);
-
 		glScaled(0.4, 0.4, 0.4);
 		plane();
 		glPopMatrix();
@@ -301,6 +311,7 @@ void draw() {
 
 static void key(unsigned char key, int x, int y)
 {
+	float fraction = 0.1f;
 	float rotFrac = 1;
 	switch (key)
 	{
@@ -325,6 +336,13 @@ static void key(unsigned char key, int x, int y)
 		fracx += 0.0001;
 		rotX += rotFrac * 3;
 		rotY -= rotFrac / 2;
+		break;
+	case 'e':
+		fracz += 0.001;
+		break;
+	case 'c':
+		if(fracz>0.002)
+			fracz -= 0.001;
 		break;
 	}
 
